@@ -3,6 +3,7 @@ package com.iovation.mobile.android.sample.sampleapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -34,7 +35,8 @@ public class WebViewActivity extends Activity {
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
                 String[] ref = url.split("#");
                 if (url.startsWith("iov://") && ref.length > 1 && ref[1] != null) {
                     String injectedJavascript="javascript:(function() { " +
@@ -49,7 +51,6 @@ public class WebViewActivity extends Activity {
 
         wv.loadUrl(url);
         wv.getSettings().setJavaScriptEnabled(true);
-        wv.getSettings().setAppCacheEnabled(true);
     }
 
 }

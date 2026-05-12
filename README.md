@@ -86,12 +86,12 @@ Version 5.3.0 of the TruValidate Device Risk SDK for Android supports Android 5.
 		
         Save the `build.gradle` file.
 
-4. If you are not already using Java 11 in your project, please include the following code into your application's 'build.gradle' file.
+4. If you are not already using Java 17 in your project, please include the following code into your application's 'build.gradle' file.
     ```
     android {
         compileOptions {
-            sourceCompatibility JavaVersion.VERSION_11
-            targetCompatibility JavaVersion.VERSION_11
+            sourceCompatibility JavaVersion.VERSION_17
+            targetCompatibility JavaVersion.VERSION_17
         }
     }
     ```
@@ -308,7 +308,7 @@ The SDK includes the ability to make a network call to TransUnion TruValidate's 
 
 ## Changelog
 ### 5.3.0
-- **Java 11 is now required.**
+- **Java 17 is now required.**
 - **The SDK has updated Kotlin (2.0.20).**
 - Minimum SDK version supported is now 24.
 - Update target SDK to 35.
