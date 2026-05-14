@@ -12,6 +12,7 @@ import com.iovation.mobile.android.FraudForceManager;
 public class MainApplication extends Application {
   @Override
   public void onCreate() {
+    super.onCreate();
     FraudForceConfiguration fraudForceConfiguration = new FraudForceConfiguration.Builder()
         .enableNetworkCalls(true)
         .subscriberKey("REPLACE WITH SUBSCRIBER KEY")
@@ -19,6 +20,5 @@ public class MainApplication extends Application {
 
     FraudForceManager fraudForceManager = FraudForceManager.INSTANCE;
     fraudForceManager.initialize(fraudForceConfiguration, getApplicationContext());
-    super.onCreate();
   }
 }

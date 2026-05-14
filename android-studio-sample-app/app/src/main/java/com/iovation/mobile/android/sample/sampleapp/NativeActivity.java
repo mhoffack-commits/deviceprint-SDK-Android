@@ -54,4 +54,10 @@ public class NativeActivity extends Activity {
             });
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        executor.shutdown();
+        super.onDestroy();
+    }
 }

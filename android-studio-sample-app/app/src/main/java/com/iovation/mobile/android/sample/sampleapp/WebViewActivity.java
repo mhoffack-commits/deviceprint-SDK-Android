@@ -3,16 +3,25 @@ package com.iovation.mobile.android.sample.sampleapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.iovation.mobile.android.FraudForceManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Created by trevorchapman on 4/13/15.
  */
 public class WebViewActivity extends Activity {
+
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     /**
      * Called when the activity is first created.
      *
@@ -26,6 +35,7 @@ public class WebViewActivity extends Activity {
 
         setContentView(R.layout.activity_webview);
         final WebView wv = (WebView) findViewById(R.id.webView);
+        wv.getSettings().setJavaScriptEnabled(true);
         String url = "file:///android_asset/JsInjectionIntegration.html";
         wv.setWebViewClient(new WebViewClient() {
             @Override
@@ -39,10 +49,15 @@ public class WebViewActivity extends Activity {
                 String url = request.getUrl().toString();
                 String[] ref = url.split("#");
                 if (url.startsWith("iov://") && ref.length > 1 && ref[1] != null) {
-                    String injectedJavascript="javascript:(function() { " +
-                            "document.getElementById('" + ref[1] + "').value = '" + FraudForceManager.INSTANCE.getBlackbox(getApplicationContext()) +
-                            "';})()";
-                    wv.loadUrl(injectedJavascript);
+                    String elementId = ref[1].replaceAll("[^a-zA-Z0-9_\\-]", "");
+                    executor.execute(() -> {
+                        String bb = FraudForceManager.INSTANCE.getBlackbox(getApplicationContext());
+                        String escapedBb = bb.replace("\\", "\\\\").replace("'", "\\'");
+                        String js = "javascript:(function() { " +
+                                "document.getElementById('" + elementId + "').value = '" + escapedBb +
+                                "';})()";
+                        mainHandler.post(() -> wv.loadUrl(js));
+                    });
                     return true;
                 }
                 return false;
@@ -50,7 +65,11 @@ public class WebViewActivity extends Activity {
         });
 
         wv.loadUrl(url);
-        wv.getSettings().setJavaScriptEnabled(true);
     }
 
+    @Override
+    protected void onDestroy() {
+        executor.shutdown();
+        super.onDestroy();
+    }
 }

@@ -12,7 +12,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         val configuration = FraudForceConfiguration.Builder()
-            .subscriberKey("M1WrRSwcjUBQmHamij3DxQJWr00YzfRhXaMkI+zhhiY=")
+            .subscriberKey("REPLACE WITH SUBSCRIBER KEY")
             .enableNetworkCalls(true)
             .build()
 
