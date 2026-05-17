@@ -33,6 +33,12 @@ public class NativeActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdown();
+    }
+
     public void printDevice(View target) {
         TextView bbResult = (TextView) findViewById(R.id.bbResult);
         bbResult.setText("");
