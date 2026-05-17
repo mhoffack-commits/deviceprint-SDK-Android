@@ -37,9 +37,11 @@ public class WebViewActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 String[] ref = url.split("#");
                 if (url.startsWith("iov://") && ref.length > 1 && ref[1] != null) {
-                    String injectedJavascript="javascript:(function() { " +
-                            "document.getElementById('" + ref[1] + "').value = '" + FraudForceManager.INSTANCE.getBlackbox(getApplicationContext()) +
-                            "';})()";
+                    String injectedJavascript = """
+                            javascript:(function() {
+                                document.getElementById('%s').value = '%s';
+                            })()""".formatted(ref[1],
+                            FraudForceManager.INSTANCE.getBlackbox(getApplicationContext()));
                     wv.loadUrl(injectedJavascript);
                     return true;
                 }
