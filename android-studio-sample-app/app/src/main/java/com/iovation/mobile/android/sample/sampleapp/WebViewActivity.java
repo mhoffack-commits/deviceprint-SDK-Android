@@ -49,7 +49,6 @@ public class WebViewActivity extends Activity {
 
         wv.loadUrl(url);
         wv.getSettings().setJavaScriptEnabled(true);
-        wv.getSettings().setAppCacheEnabled(true);
     }
 
 }
