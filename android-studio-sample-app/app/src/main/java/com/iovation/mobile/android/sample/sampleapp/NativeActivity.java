@@ -47,9 +47,15 @@ public class NativeActivity extends Activity {
         bbResultLabel.setText(R.string.printingWaitMsg);
         bbResultLabel.setVisibility(View.VISIBLE);
 
+        if (executor.isShutdown()) {
+            return;
+        }
         executor.execute(() -> {
             String bb = FraudForceManager.INSTANCE.getBlackbox(getApplicationContext());
             mainHandler.post(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
                 TextView resultLabel = (TextView) findViewById(R.id.bbResultLabel);
                 resultLabel.setText(R.string.bbResultLabel);
                 resultLabel.setVisibility(View.VISIBLE);
